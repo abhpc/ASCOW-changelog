@@ -39,6 +39,14 @@ docker compose up -d
 ```
 
 # 3 更新日志(按日期倒序排列)
+## 20260731
+- [bug修复]http单点登录强制登录失败。
+- [bug修复]http无法信任设备。
+- [bug修复]单点登录被踢没有提示
+
+## 20260727
+- [bug修复]操作日志中的ip会被解析为容器ip
+
 ## 20260723
 - [功能优化]冻结费用
 - [Bug修复]计量方式删详情查看
@@ -55,18 +63,40 @@ docker compose up -d
 - [安全]按账号限制登录失败（含非法账号）
 - [安全]前端安全-隐藏敏感运行配置
 - [安全]允许用户信任设备（信任设备不再要求2FA认证），用户查看信任设备列表并删除信任设备。
+- [安全]登录安全增强-2FA+图片验证码+登录限制
+
+  **注意**：启用2FA时，要修改docker-compose.yml，增加mis-server:environment:MIS_CONFIG_ENCRYPT_KEY=请替换为固定的高强度随机字符串
+- [安全]运行httos协议
+
+  **注意**：需要配置docker-compose.yml
+  ```
+  gateway:
+    restart: always
+    environment:
+    # 添加
+      - HTTPS_ENABLED=true
+      - HTTPS_PORT=443
+      - HTTPS_CERT_PATH=/etc/scow/ssl/fullchain.pem
+      - HTTPS_KEY_PATH=/etc/scow/ssl/privkey.pem
+      - HTTPS_REDIRECT_HTTP_TO_HTTPS=true
+      - HTTPS_HSTS_ENABLED=false
+      - HTTPS_HSTS_MAX_AGE=31536000
+      - ALLOWED_SERVER_NAME=mx.yinhe596.cn
+      - DEFAULT_SERVER_BLOCK=server {\n    listen 80 default_server;\n    return 444;\n  }\n\n  server {\n    listen 443 ssl default_server;\n    ssl_certificate /etc/scow/ssl/fullchain.pem;\n    ssl_certificate_key /etc/scow/ssl/privkey.pem;\n    return 444;\n  }
+    ports:
+    # 修改端口号为443
+      - '88:443'
+  ```
 - [Bug修复]修复信息中心查看更多跳转(因隐藏配置出现的bug)
 - [Bug修复]修复管理员修改用户信息修改被相同邮箱阻断
 - [Bug修复]邮箱验证通过后旧邮箱才失效
 - [功能优化]管理员可查看邮箱验证状态
 - [功能优化]增加站内信和邮件通知统计曲线
-
-- [安全]登录安全增强-MFA+图片验证码+登录限制
 - [功能优化]增加找回密码功能
 
 ## 20260622
 - [功能优化]资源使用监控，允许管理员查看作业负载
-- [功能优化]新建应用时添加临时邮箱接收提醒 #163
+- [功能优化]新建应用时添加临时邮箱接收提醒
 - [功能优化]在线配置发送邮箱
 - [Bug修复]未设置邮箱时，发送验证邮箱失败提醒
 
