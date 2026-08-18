@@ -39,6 +39,10 @@ docker compose up -d
 ```
 
 # 3 更新日志(按日期倒序排列)
+## 20260818
+- [功能优化]显示上传进度与速度
+- [功能优化]支持作业计费精度热生效
+
 ## 20260816
 - [bug修复]http单点登录强制登录提示。
 - [功能优化]批量创建用户
@@ -94,7 +98,26 @@ docker compose up -d
     ports:
     # 修改端口号为443
       - '88:443'
+    volumes:
+    # 添加ssl证书路径
+      - ./ssl:/etc/scow/ssl:ro
+    
+  auth:
+    environment:
+      - PUBLIC_ORIGIN=https://mx.yinhe596.cn:20388 # 实际访问地址
+
+  portal-web:
+    environment:
+      - PROTOCOL=https
+
+  mis-web:
+    environment:
+      - PROTOCOL=https
   ```
+
+  然后重启
+  docker compose up -d --force-recreate gateway auth portal-web mis-web
+
 - [Bug修复]修复信息中心查看更多跳转(因隐藏配置出现的bug)
 - [Bug修复]修复管理员修改用户信息修改被相同邮箱阻断
 - [Bug修复]邮箱验证通过后旧邮箱才失效
