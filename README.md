@@ -77,7 +77,16 @@ docker compose up -d
 - [安全]允许用户信任设备（信任设备不再要求2FA认证），用户查看信任设备列表并删除信任设备。
 - [安全]登录安全增强-2FA+图片验证码+登录限制
 
-  **注意**：启用2FA时，要修改docker-compose.yml，增加mis-server:environment:MIS_CONFIG_ENCRYPT_KEY=请替换为固定的高强度随机字符串
+  **注意**：启用2FA时，要修改docker-compose.yml，增加mis-server:environment:MIS_CONFIG_ENCRYPT_KEY=请替换为固定的高强度随机字符串，
+  ```bash
+  mis-server:
+    environment:
+    - MIS_CONFIG_ENCRYPT_KEY=请替换为固定的高强度随机字符
+
+  auth:
+    environment:
+    - MIS_SERVER_URL=mis-server:5000
+  ```
 - [安全]运行httos协议
 
   **注意**：需要配置docker-compose.yml
